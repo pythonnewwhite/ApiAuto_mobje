@@ -1,0 +1,78 @@
+{
+  "uid" : "200970bd3fdd6cc",
+  "name" : "密码登录-手机号为空",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "003f6bade4114f1d1725b941be81f57a",
+  "time" : {
+    "start" : 1603350038961,
+    "stop" : 1603350038962,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "5215944f5a78ebd5",
+      "name" : "stdout",
+      "source" : "5215944f5a78ebd5.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "18416-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ004', '密码登录-手机号为空', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"\",\\n    \"password\":\"PVwrv10+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "200970bd3fdd6cc.json",
+  "parameterValues" : [ "('MJ004', '密码登录-手机号为空', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"\",\\n    \"password\":\"PVwrv10+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+}

@@ -1,0 +1,829 @@
+{
+  "uid" : "b1a8273437954620fa374b796ffaacdd",
+  "name" : "behaviors",
+  "children" : [ {
+    "name" : "摩捷出行",
+    "children" : [ {
+      "name" : "登录",
+      "children" : [ {
+        "name" : "密码登录-正确",
+        "uid" : "b38f051c87f6b0f3",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351246931,
+          "stop" : 1603351247414,
+          "duration" : 483
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ001', '密码登录-正确', 'yes', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv7+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"status\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTm8iOiJDRU0tMjAyMDEwMDkxNzUyMDAwMDk3MDAwMyIsInRpbWUiOjE2MDMzNTAwMzg2MzIsInVzZXJJZCI6IjEwMDAzNTMifQ.1y5dzaHGZGW3Fsbp0EajtCtuXrJ6W0iloG_9zPvp_3M\",\"onceToken\":null,\"black\":false,\"sameDevice\":true,\"aid\":\"2020100917520000970003\",\"nickname\":\"柴宝国\",\"username\":\"柴宝国\",\"authenticated\":true}}', None)" ]
+      }, {
+        "name" : "密码登录-手机号错误",
+        "uid" : "5fcb920b84439780",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247418,
+          "stop" : 1603351247419,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ002', '密码登录-手机号错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg\",\\n    \"password\":\"PVwrv8+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+      }, {
+        "name" : "密码登录-密码错误",
+        "uid" : "cdc6b434298ad767",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247423,
+          "stop" : 1603351247423,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ003', '密码登录-密码错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv9+oVP\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+      }, {
+        "name" : "密码登录-手机号为空",
+        "uid" : "5762275b195d1b76",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247427,
+          "stop" : 1603351247428,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ004', '密码登录-手机号为空', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"\",\\n    \"password\":\"PVwrv10+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+      }, {
+        "name" : "密码登录-密码为空",
+        "uid" : "61031ddc67926937",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247432,
+          "stop" : 1603351247432,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ005', '密码登录-密码为空', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+      }, {
+        "name" : "密码登录-无参数",
+        "uid" : "ee35c460c2318a31",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247437,
+          "stop" : 1603351247437,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ006', '密码登录-无参数', 'no', 'user/user/enrollee/login/password', 'post', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+      }, {
+        "name" : "将消息设为已读-消息ID正确",
+        "uid" : "3a2daa06f0f15a",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247441,
+          "stop" : 1603351247441,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ007', '将消息设为已读-消息ID正确', 'no', 'message/inpublic/read', 'post', '{\\n\"ids\":[\"15991260520128293\",\"15991260518731196\"]\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'success', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)" ]
+      }, {
+        "name" : "将消息设为已读-消息ID为空列表",
+        "uid" : "2bc350e400be4c09",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247445,
+          "stop" : 1603351247445,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ008', '将消息设为已读-消息ID为空列表', 'no', 'message/inpublic/read', 'post', '{\\n\"ids\":[]\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'success', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)" ]
+      }, {
+        "name" : "将消息设为已读-消息ID为空",
+        "uid" : "7dd6e733f104a914",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247449,
+          "stop" : 1603351247450,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ009', '将消息设为已读-消息ID为空', 'no', 'message/inpublic/read', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)" ]
+      }, {
+        "name" : "将消息设为已读-消息ID为NULL ",
+        "uid" : "4428c864182d5991",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247453,
+          "stop" : 1603351247454,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ010', '将消息设为已读-消息ID为NULL ', 'no', 'message/inpublic/read', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详情-入参正确的优惠券人员记录id号",
+        "uid" : "114c4b7964eda92f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247458,
+          "stop" : 1603351247459,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ011', '优惠券发放记录详情-入参正确的优惠券人员记录id号', 'no', 'coupon/coupon/tmCoupon/selectCouponListById?id=1', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详情-优惠券人员记录id号为空",
+        "uid" : "8b69d440b1a8a234",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247463,
+          "stop" : 1603351247463,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ012', '优惠券发放记录详情-优惠券人员记录id号为空', 'no', 'coupon/coupon/tmCoupon/selectCouponListById?id=\"\"', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"id:Failed to convert property value of type \\'java.lang.String\\' to required type \\'java.lang.Long\\' for property \\'id\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"\\\\\"\\\\\"\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详情-优惠券人员记录id号为null",
+        "uid" : "9867005a232e2f5f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247467,
+          "stop" : 1603351247467,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ013', '优惠券发放记录详情-优惠券人员记录id号为null', 'no', 'coupon/coupon/tmCoupon/selectCouponListById?id=null', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"id:Failed to convert property value of type \\'java.lang.String\\' to required type \\'java.lang.Long\\' for property \\'id\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"null\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详情-不入参优惠券人员记录id号",
+        "uid" : "e806d4ddc45e4fd8",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247471,
+          "stop" : 1603351247472,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ014', '优惠券发放记录详情-不入参优惠券人员记录id号', 'no', 'coupon/coupon/tmCoupon/selectCouponListById', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5009\",\"errmsg\":\"id不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详情-优惠券人员记录id号错误",
+        "uid" : "dee693c425deed30",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247476,
+          "stop" : 1603351247477,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ015', '优惠券发放记录详情-优惠券人员记录id号错误', 'no', 'coupon/coupon/tmCoupon/selectCouponListById?id=0.1', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"id:Failed to convert property value of type \\'java.lang.String\\' to required type \\'java.lang.Long\\' for property \\'id\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"0.1\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-入参正确的参数",
+        "uid" : "2849914e66b3752c",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247480,
+          "stop" : 1603351247481,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ016', '优惠券发放记录详细查询Web-入参正确的参数', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-优惠券no为空",
+        "uid" : "af1387b71f474a89",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247485,
+          "stop" : 1603351247485,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ017', '优惠券发放记录详细查询Web-优惠券no为空', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=&page=1&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-优惠券no为null",
+        "uid" : "75bcd2ce3b5a58d1",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247489,
+          "stop" : 1603351247489,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ018', '优惠券发放记录详细查询Web-优惠券no为null', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=null&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-错误的优惠券no",
+        "uid" : "5379c9aae9e2bc94",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247494,
+          "stop" : 1603351247494,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ019', '优惠券发放记录详细查询Web-错误的优惠券no', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM0120280416570490618&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-不入参优惠券no",
+        "uid" : "5135140af306305",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247500,
+          "stop" : 1603351247501,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ020', '优惠券发放记录详细查询Web-不入参优惠券no', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数为空",
+        "uid" : "4ba658b78b4196d8",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247505,
+          "stop" : 1603351247506,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ021', '优惠券发放记录详细查询Web-页数为空', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=\"\"&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"page:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'page\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"\\\\\"\\\\\"\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数为0",
+        "uid" : "f9b86ee2fd318db9",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247509,
+          "stop" : 1603351247509,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ022', '优惠券发放记录详细查询Web-页数为0', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数为null",
+        "uid" : "5dd6bf0a0273559e",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247514,
+          "stop" : 1603351247514,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ023', '优惠券发放记录详细查询Web-页数为null', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=null&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"page:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'page\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"null\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数为1",
+        "uid" : "8c4c3f0cd9322a69",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247518,
+          "stop" : 1603351247518,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ024', '优惠券发放记录详细查询Web-页数为1', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=1&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数为10000000",
+        "uid" : "89e1f471db9ff008",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247522,
+          "stop" : 1603351247523,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ025', '优惠券发放记录详细查询Web-页数为10000000', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=1000000&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页数格式错误",
+        "uid" : "a94139a97748515d",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247526,
+          "stop" : 1603351247527,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ026', '优惠券发放记录详细查询Web-页数格式错误', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=\"0\"&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"page:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'page\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"\\\\\"0\\\\\"\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-不入参页数",
+        "uid" : "59325176a66751e2",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247530,
+          "stop" : 1603351247530,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ027', '优惠券发放记录详细查询Web-不入参页数', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数为空",
+        "uid" : "e8cb2e915c17b1f0",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247535,
+          "stop" : 1603351247536,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ028', '优惠券发放记录详细查询Web-页面条数为空', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=\"\"', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"size:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'size\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"\\\\\"\\\\\"\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数为0",
+        "uid" : "850d279f6bf08e92",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247539,
+          "stop" : 1603351247540,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ029', '优惠券发放记录详细查询Web-页面条数为0', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=0', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数为null",
+        "uid" : "b3902940ae8f0107",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247543,
+          "stop" : 1603351247544,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ030', '优惠券发放记录详细查询Web-页面条数为null', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=null', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"size:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'size\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"null\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数为1",
+        "uid" : "4d166c457e36f6a2",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247548,
+          "stop" : 1603351247549,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ031', '优惠券发放记录详细查询Web-页面条数为1', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=1', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数为10000000",
+        "uid" : "25db10152a4d301",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247552,
+          "stop" : 1603351247553,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ032', '优惠券发放记录详细查询Web-页面条数为10000000', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=100000', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-页面条数格式错误",
+        "uid" : "9c9f06b42b17021b",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247557,
+          "stop" : 1603351247557,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ033', '优惠券发放记录详细查询Web-页面条数格式错误', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0&size=\"1\"', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"size:Failed to convert property value of type \\'java.lang.String\\' to required type \\'int\\' for property \\'size\\'; nested exception is java.lang.NumberFormatException: For input string: \\\\\"\\\\\"1\\\\\"\\\\\",\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券发放记录详细查询Web-不入参页面条数",
+        "uid" : "c40a08a6ff1c0c36",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247563,
+          "stop" : 1603351247564,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ034', '优惠券发放记录详细查询Web-不入参页面条数', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=0', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-入参正确的场景",
+        "uid" : "361e4c73e65e9a83",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247567,
+          "stop" : 1603351247568,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ035', '优惠券全部发放Web-入参正确的场景', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-创建人为空",
+        "uid" : "1cb2a5cce84c49b0",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247572,
+          "stop" : 1603351247572,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ036', '优惠券全部发放Web-创建人为空', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':''}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-创建人为null",
+        "uid" : "1bcf55d061492cee",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247577,
+          "stop" : 1603351247577,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ037', '优惠券全部发放Web-创建人为null', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':null}\", None, 'failure', None, None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-创建人格式不正确",
+        "uid" : "ed5d9ed53994add3",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247581,
+          "stop" : 1603351247581,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ038', '优惠券全部发放Web-创建人格式不正确', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-不入参创建人",
+        "uid" : "ece98d3fa5aee683",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247586,
+          "stop" : 1603351247586,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ039', '优惠券全部发放Web-不入参创建人', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-优惠券no为空",
+        "uid" : "56c805082698cdee",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247590,
+          "stop" : 1603351247590,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ040', '优惠券全部发放Web-优惠券no为空', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": \"\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-优惠券no为null",
+        "uid" : "4f389480b0fe1bd1",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247594,
+          "stop" : 1603351247595,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ041', '优惠券全部发放Web-优惠券no为null', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": null\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-优惠券no格式不正确",
+        "uid" : "33f16f4cd6747f18",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247599,
+          "stop" : 1603351247599,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ042', '优惠券全部发放Web-优惠券no格式不正确', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"no\": 1\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券全部发放Web-不入参优惠券no",
+        "uid" : "ead0d11dca1c33cd",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247603,
+          "stop" : 1603351247603,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ043', '优惠券全部发放Web-不入参优惠券no', 'no', 'coupon/coupon/tmCoupon/tmCouponAllDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-入参正确的场景",
+        "uid" : "db9c5e03dc6ba4cc",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247607,
+          "stop" : 1603351247608,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ044', '优惠券批量发放Web-入参正确的场景', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-创建人为空",
+        "uid" : "79dfe498ecde2fb",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247612,
+          "stop" : 1603351247613,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ045', '优惠券批量发放Web-创建人为空', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':''}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-创建人为null",
+        "uid" : "5e569d304ddff775",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247617,
+          "stop" : 1603351247618,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ046', '优惠券批量发放Web-创建人为null', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':null}\", None, 'failure', None, None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-创建人格式不正确",
+        "uid" : "b2bd0362ce7969e",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247622,
+          "stop" : 1603351247623,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ047', '优惠券批量发放Web-创建人格式不正确', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-不入参创建人",
+        "uid" : "883fe302a50f5018",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247628,
+          "stop" : 1603351247628,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ048', '优惠券批量发放Web-不入参创建人', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-用户列表为空",
+        "uid" : "8789edd5b3c5e79d",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247632,
+          "stop" : 1603351247632,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ049', '优惠券批量发放Web-用户列表为空', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\":[],\\n  \"no\": \"TM012019050503145701157\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5028\",\"errmsg\":\"用户不可为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-用户列表为null",
+        "uid" : "cfd07613d8a070bc",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247636,
+          "stop" : 1603351247637,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ050', '优惠券批量发放Web-用户列表为null', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [null],\\n  \"no\": \"TM012019050503145701157\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5028\",\"errmsg\":\"用户不可为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-用户列表格式不正确",
+        "uid" : "9713fa0ecbfabff2",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247641,
+          "stop" : 1603351247641,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ051', '优惠券批量发放Web-用户列表格式不正确', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\":\"\",\\n  \"no\": \"TM012020081102433227096\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"JSON parse error: Cannot construct instance of `java.util.ArrayList` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value (\\'\\'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `java.util.ArrayList` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value (\\'\\')\\\\n at [Source: (PushbackInputStream); line: 2, column: 16] (through reference chain: com.tima.coupon.dto.TmCouponDTO[\\\\\"enrolleeId\\\\\"])\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-不入参用户列表",
+        "uid" : "f7fab772f5fbbec0",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247647,
+          "stop" : 1603351247648,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ052', '优惠券批量发放Web-不入参用户列表', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"no\": \"TM012020081102433227096\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"500\",\"errmsg\":\"服务器内部错误\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-优惠券no为空",
+        "uid" : "d6a948798375f7eb",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247652,
+          "stop" : 1603351247652,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ053', '优惠券批量发放Web-优惠券no为空', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000263,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\":\"\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-优惠券no为null",
+        "uid" : "219a18104e9c46ee",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247657,
+          "stop" : 1603351247658,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ054', '优惠券批量发放Web-优惠券no为null', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000263,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\":null\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-优惠券no格式不正确",
+        "uid" : "543ad53aafeee0e4",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247662,
+          "stop" : 1603351247662,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ055', '优惠券批量发放Web-优惠券no格式不正确', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000263,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\":1\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "优惠券批量发放Web-不入参优惠券no",
+        "uid" : "b9202eacc9e7ca8f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247666,
+          "stop" : 1603351247667,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ056', '优惠券批量发放Web-不入参优惠券no', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000263,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ]\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "查询用户优惠券是否可用App-入参正确的场景",
+        "uid" : "a58f5bc677be65a",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247671,
+          "stop" : 1603351247672,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ057', '查询用户优惠券是否可用App-入参正确的场景', 'no', 'coupon/coupon/tmCouponMember/searchTmCouponMemberOneApp', 'post', '{\\n  \"id\": 1\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "查询用户优惠券是否可用App-用户优惠券id为空",
+        "uid" : "6fd914db965f1cbb",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247676,
+          "stop" : 1603351247676,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ058', '查询用户优惠券是否可用App-用户优惠券id为空', 'no', 'coupon/coupon/tmCouponMember/searchTmCouponMemberOneApp', 'post', '{\\n  \"id\": \"\"\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "查询用户优惠券是否可用App-用户优惠券id为null",
+        "uid" : "d8e7b6a95dfe7f7f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247680,
+          "stop" : 1603351247680,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ059', '查询用户优惠券是否可用App-用户优惠券id为null', 'no', 'coupon/coupon/tmCouponMember/searchTmCouponMemberOneApp', 'post', '{\\n  \"id\": null\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "查询用户优惠券是否可用App-用户优惠券id格式不正确",
+        "uid" : "a4aa9ce6af197042",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247684,
+          "stop" : 1603351247685,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ060', '查询用户优惠券是否可用App-用户优惠券id格式不正确', 'no', 'coupon/coupon/tmCouponMember/searchTmCouponMemberOneApp', 'post', '{\\n  \"id\": \"0\"\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "查询用户优惠券是否可用App-不入参用户优惠券id",
+        "uid" : "46443ba5076ecfa",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247689,
+          "stop" : 1603351247689,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ061', '查询用户优惠券是否可用App-不入参用户优惠券id', 'no', 'coupon/coupon/tmCouponMember/searchTmCouponMemberOneApp', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"1\",\"errmsg\":\"Required request body is missing: public com.tima.coupon.common.vo.ResultVO<com.tima.coupon.entity.TmCoupon> com.tima.coupon.controller.TmCouponMemberController.searchTmCouponMemberOne(com.tima.coupon.dto.TmCouponMemberDTO)\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "用户使用优惠券App-入参正确的场景",
+        "uid" : "299ead2beffd5d35",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247693,
+          "stop" : 1603351247693,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ062', '用户使用优惠券App-入参正确的场景', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": 1\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5032\",\"errmsg\":\"用户id不可以为空\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "用户使用优惠券App-用户优惠券id为空",
+        "uid" : "a18c2f08639005d1",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247698,
+          "stop" : 1603351247698,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ063', '用户使用优惠券App-用户优惠券id为空', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": \"\"\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "用户使用优惠券App-用户优惠券id为null",
+        "uid" : "de682f726e9c045f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247702,
+          "stop" : 1603351247702,
+          "duration" : 0
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ064', '用户使用优惠券App-用户优惠券id为null', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": null\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "用户使用优惠券App-用户优惠券id格式不正确",
+        "uid" : "61e0a9808f492c7f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247706,
+          "stop" : 1603351247707,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ065', '用户使用优惠券App-用户优惠券id格式不正确', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": \"0\"\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5032\",\"errmsg\":\"用户id不可以为空\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "用户使用优惠券App-不入参用户优惠券id",
+        "uid" : "4022df64b905522f",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "passed",
+        "time" : {
+          "start" : 1603351247711,
+          "stop" : 1603351247712,
+          "duration" : 1
+        },
+        "flaky" : false,
+        "parameters" : [ "('MJ066', '用户使用优惠券App-不入参用户优惠券id', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":0,\"errors\":[{\"errcode\":\"500\",\"errmsg\":\"服务器内部错误\"}],\"status\":\"failure\"}', None)" ]
+      }, {
+        "name" : "对公",
+        "uid" : "58acaf6fb2032ebe",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "failed",
+        "time" : {
+          "start" : 1603351248382,
+          "stop" : 1603351248637,
+          "duration" : 255
+        },
+        "flaky" : true,
+        "parameters" : [ "('MJ067', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"411503199310185317\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, '{\"data\":{\"id\":12236,\"companyName\":\"一汽大众\",\"companyNo\":\"FD012019010512112323445\",\"department\":[{\"no\":\"FD022019112202543838316\",\"departmentName\":\"123\",\"approvalStatus\":\"PRIOR\"}],\"gender\":\"MALE\",\"identityNumber\":\"411503199310185317\",\"name\":\"柴宝国\",\"phone\":\"15900842165\",\"status\":true,\"userPrivileges\":\"APPROVERLEADER\"},\"status\":\"success\"}', None)" ]
+      }, {
+        "name" : "对公",
+        "uid" : "323dbffa28bd78cf",
+        "parentUid" : "b17f8389003f955d26bdc238cdb11745",
+        "status" : "failed",
+        "time" : {
+          "start" : 1603351248909,
+          "stop" : 1603351249191,
+          "duration" : 282
+        },
+        "flaky" : true,
+        "parameters" : [ "('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, '{\"data\":\"NULL_GROUP_USER\",\"status\":\"success\"}', None)" ]
+      } ],
+      "uid" : "b17f8389003f955d26bdc238cdb11745"
+    } ],
+    "uid" : "5f655e24dfdca3b664c3a363f9945a30"
+  } ]
+}

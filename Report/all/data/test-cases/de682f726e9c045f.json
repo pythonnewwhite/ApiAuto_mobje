@@ -1,0 +1,112 @@
+{
+  "uid" : "de682f726e9c045f",
+  "name" : "用户使用优惠券App-用户优惠券id为null",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "3c968c0963813478497415de82f2c266",
+  "time" : {
+    "start" : 1603351247702,
+    "stop" : 1603351247702,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "aab694a850880528",
+      "name" : "stdout",
+      "source" : "aab694a850880528.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "10324-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ064', '用户使用优惠券App-用户优惠券id为null', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": null\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ {
+      "uid" : "a976a4d3f9ad540e",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603350039226,
+        "stop" : 1603350039226,
+        "duration" : 0
+      }
+    }, {
+      "uid" : "e14c51d15aa75d54",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349658159,
+        "stop" : 1603349658160,
+        "duration" : 1
+      }
+    }, {
+      "uid" : "fa5f7911a1a88565",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349508288,
+        "stop" : 1603349508288,
+        "duration" : 0
+      }
+    }, {
+      "uid" : "9781d1a95e5ab12f",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349411888,
+        "stop" : 1603349411888,
+        "duration" : 0
+      }
+    } ],
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "de682f726e9c045f.json",
+  "parameterValues" : [ "('MJ064', '用户使用优惠券App-用户优惠券id为null', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', '{\\n  \"id\": null\\n}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5010\",\"errmsg\":\"优惠券编号不可以为空！\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+}

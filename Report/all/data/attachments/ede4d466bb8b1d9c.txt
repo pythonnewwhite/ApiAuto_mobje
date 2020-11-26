@@ -1,0 +1,5 @@
+d <class 'bytes'>
+这个是post请求
+body None
+header {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqFSOBMtquw/niP2Ut5dz71OkCoIigcpGmu/2hKIiQk2nUhWe8EN3Iy5lUt0mFoTitcm5uJw3kwcchIy2r+WS+oZZDkcURL5AoPXVMr/0dTTJr2HkxG+TbpHBX3Ji8PhY532oJlOZGu5ig=='}
+请求结果响应值： {"code":0,"errors":[{"errcode":"500","errmsg":"服务器内部错误"}],"status":"failure"}

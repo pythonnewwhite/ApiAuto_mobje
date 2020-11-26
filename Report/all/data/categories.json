@@ -1,0 +1,37 @@
+{
+  "uid" : "4b4757e66a1912dae1a509f688f20b0f",
+  "name" : "categories",
+  "children" : [ {
+    "name" : "Product defects",
+    "children" : [ {
+      "name" : "AssertionError: assert 'success' == None",
+      "children" : [ {
+        "name" : "对公",
+        "uid" : "58acaf6fb2032ebe",
+        "parentUid" : "fc5a486262b9bbd59b8e8a6c020491af",
+        "status" : "failed",
+        "time" : {
+          "start" : 1603351248382,
+          "stop" : 1603351248637,
+          "duration" : 255
+        },
+        "flaky" : true,
+        "parameters" : [ "('MJ067', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"411503199310185317\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, '{\"data\":{\"id\":12236,\"companyName\":\"一汽大众\",\"companyNo\":\"FD012019010512112323445\",\"department\":[{\"no\":\"FD022019112202543838316\",\"departmentName\":\"123\",\"approvalStatus\":\"PRIOR\"}],\"gender\":\"MALE\",\"identityNumber\":\"411503199310185317\",\"name\":\"柴宝国\",\"phone\":\"15900842165\",\"status\":true,\"userPrivileges\":\"APPROVERLEADER\"},\"status\":\"success\"}', None)" ]
+      }, {
+        "name" : "对公",
+        "uid" : "323dbffa28bd78cf",
+        "parentUid" : "fc5a486262b9bbd59b8e8a6c020491af",
+        "status" : "failed",
+        "time" : {
+          "start" : 1603351248909,
+          "stop" : 1603351249191,
+          "duration" : 282
+        },
+        "flaky" : true,
+        "parameters" : [ "('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, '{\"data\":\"NULL_GROUP_USER\",\"status\":\"success\"}', None)" ]
+      } ],
+      "uid" : "fc5a486262b9bbd59b8e8a6c020491af"
+    } ],
+    "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
+  } ]
+}

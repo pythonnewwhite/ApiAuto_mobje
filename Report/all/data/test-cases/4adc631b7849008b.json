@@ -1,0 +1,78 @@
+{
+  "uid" : "4adc631b7849008b",
+  "name" : "对公",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "fc3608ef2646a04f7508005940103451",
+  "time" : {
+    "start" : 1603349411901,
+    "stop" : 1603349411901,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "ba9e27ca631f03b8",
+      "name" : "stdout",
+      "source" : "ba9e27ca631f03b8.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "7500-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ066', '对公', 'no', 'rcsp/rcsp/groupUser/searchGroupUserList', 'get', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, None, None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "4adc631b7849008b.json",
+  "parameterValues" : [ "('MJ066', '对公', 'no', 'rcsp/rcsp/groupUser/searchGroupUserList', 'get', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, None, None)" ]
+}

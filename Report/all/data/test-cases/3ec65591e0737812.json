@@ -1,0 +1,82 @@
+{
+  "uid" : "3ec65591e0737812",
+  "name" : "对公",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "ef847f0c14ba0d5ea7cfb4cc130f004b",
+  "time" : {
+    "start" : 1603350040420,
+    "stop" : 1603350040687,
+    "duration" : 267
+  },
+  "status" : "failed",
+  "statusMessage" : "AssertionError: assert 'success' == None",
+  "statusTrace" : "self = <test_pytest.Test_pytest object at 0x000001D88DA63A58>\ncase_data = ('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', ...)\n\n    @pytest.mark.flaky(returns=1)\n    @allure.story('登录')\n    # @pytest.mark.parametrize('case_data', data)\n    def test_case(self,case_data):\n        allure.dynamic.title(case_data[1])\n        # allure.description(case_data[1])\n        cookie=None\n        header=None\n        body=None\n        get_params=None\n        if case_data[2] == 'yes':\n            if hd_ini.read_ini(\"host\", \"test2\") is not None:\n                host=eval(hd_ini.read_ini(\"host\",\"test2\"))\n            else:\n                print('ini文件中未查询到域名信息')\n                return\n            path=case_data[3]\n            url=host+path\n            # print(\"url:\",url)\n    \n            if case_data[7] !=None:\n                # print(case_data[7])\n                header=eval(case_data[7])\n                # print(\"header\",type(header))\n                if 'token' in header.keys() :\n                    new_token=EncryptionData().get_token()\n                    header=Handel_json().change_json_value(header,'token',new_token)\n            else:\n                print(\"header为空\")\n    \n            if case_data[4] == \"post\":\n                    print(\"这个是post请求\")\n                    if case_data[5] != None:\n                        body=case_data[5].encode(\"utf-8\")\n                    if case_data[6] != None:\n                        cookie=eval(case_data[6])\n                    # if case_data[7] !=None:\n                    #     header=eval(case_data[7])\n                    # print(body,header,cookie)\n                    print('body', body)\n                    print('header', header)\n                    res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)\n                    row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1\n                    Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)\n                    print('请求结果响应值：', res.text)\n                    if res.text !=\"\" and case_data[1]==\"密码登录-正确\":\n                        re_response = json.loads(res.text)\n                        print(\"reeee\",header)\n                        if re_response[\"status\"] == \"success\":\n                            Handle_init().write_ini(\"login\",res.text,section=\"test2\")\n                        else:\n                            return\n                    elif res.text !=\"\":\n                        re_response = json.loads(res.text)\n>                       assert re_response['status']==case_data[9]\nE                       AssertionError: assert 'success' == None\n\ntest_pytest.py:76: AssertionError",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "failed",
+    "statusMessage" : "AssertionError: assert 'success' == None",
+    "statusTrace" : "self = <test_pytest.Test_pytest object at 0x000001D88DA63A58>\ncase_data = ('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', ...)\n\n    @pytest.mark.flaky(returns=1)\n    @allure.story('登录')\n    # @pytest.mark.parametrize('case_data', data)\n    def test_case(self,case_data):\n        allure.dynamic.title(case_data[1])\n        # allure.description(case_data[1])\n        cookie=None\n        header=None\n        body=None\n        get_params=None\n        if case_data[2] == 'yes':\n            if hd_ini.read_ini(\"host\", \"test2\") is not None:\n                host=eval(hd_ini.read_ini(\"host\",\"test2\"))\n            else:\n                print('ini文件中未查询到域名信息')\n                return\n            path=case_data[3]\n            url=host+path\n            # print(\"url:\",url)\n    \n            if case_data[7] !=None:\n                # print(case_data[7])\n                header=eval(case_data[7])\n                # print(\"header\",type(header))\n                if 'token' in header.keys() :\n                    new_token=EncryptionData().get_token()\n                    header=Handel_json().change_json_value(header,'token',new_token)\n            else:\n                print(\"header为空\")\n    \n            if case_data[4] == \"post\":\n                    print(\"这个是post请求\")\n                    if case_data[5] != None:\n                        body=case_data[5].encode(\"utf-8\")\n                    if case_data[6] != None:\n                        cookie=eval(case_data[6])\n                    # if case_data[7] !=None:\n                    #     header=eval(case_data[7])\n                    # print(body,header,cookie)\n                    print('body', body)\n                    print('header', header)\n                    res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)\n                    row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1\n                    Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)\n                    print('请求结果响应值：', res.text)\n                    if res.text !=\"\" and case_data[1]==\"密码登录-正确\":\n                        re_response = json.loads(res.text)\n                        print(\"reeee\",header)\n                        if re_response[\"status\"] == \"success\":\n                            Handle_init().write_ini(\"login\",res.text,section=\"test2\")\n                        else:\n                            return\n                    elif res.text !=\"\":\n                        re_response = json.loads(res.text)\n>                       assert re_response['status']==case_data[9]\nE                       AssertionError: assert 'success' == None\n\ntest_pytest.py:76: AssertionError",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "46eb73fd09279df9",
+      "name" : "stdout",
+      "source" : "46eb73fd09279df9.txt",
+      "type" : "text/plain",
+      "size" : 986
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : true,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "18416-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, None, None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "3ec65591e0737812.json",
+  "parameterValues" : [ "('MJ068', '对公', 'yes', 'rcsp/rcsp/groupUser/searchGroupUserList', 'post', '{\"identityNumber\":\"41150319931018537\"}', None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, None, None, None)" ]
+}

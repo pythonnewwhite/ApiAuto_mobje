@@ -1,0 +1,5 @@
+d <class 'bytes'>
+这个是post请求
+body b'{"identityNumber":"41150319931018537"}'
+header {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqFsJ68648U6t0dAfuZrV3rFCFK7AQlK5eaNui/IaGFkl/cB1VMyy/8FtSzeE3hoObgzPeqKyNHRaQ+k2KVxwmrwBFNlNOgrAArUtv8YFSZfQwsCEDR2VPQGeiE7uI+jjv+qfWCPj7Kldg=='}
+请求结果响应值： {"data":"NULL_GROUP_USER","status":"success"}

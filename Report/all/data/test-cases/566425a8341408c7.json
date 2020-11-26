@@ -1,0 +1,78 @@
+{
+  "uid" : "566425a8341408c7",
+  "name" : "密码登录-正确",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "947341774571908e4f948b7c9dfa99a7",
+  "time" : {
+    "start" : 1603349411106,
+    "stop" : 1603349411614,
+    "duration" : 508
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "c2890473784323f5",
+      "name" : "stdout",
+      "source" : "c2890473784323f5.txt",
+      "type" : "text/plain",
+      "size" : 623
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "7500-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ001', '密码登录-正确', 'yes', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv7+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', 'The system is busy, please try again later!', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "566425a8341408c7.json",
+  "parameterValues" : [ "('MJ001', '密码登录-正确', 'yes', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv7+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', 'The system is busy, please try again later!', None)" ]
+}

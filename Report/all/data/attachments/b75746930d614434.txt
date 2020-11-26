@@ -1,0 +1,6 @@
+d <class 'bytes'>
+这个是get请求
+get_params <class 'NoneType'> None
+header <class 'dict'> {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqEOo1fICAE17AvDvMoD5fiSCpgQEzpiBIfEgzZ6T63Bv2NhKDO+odsaMHHdEdQaDa5nPx/0xwUgJnMUEKjY6n8t9pnSFpqWIHxy6vehbauPFMOLaI4Cw0Yu88j0ayE8zwDBRe3QW0vbqg=='}
+请求结果响应值： {"code":0,"errors":[{"errcode":"400","errmsg":"请求失败"}],"status":"failure"}
+<class 'str'>

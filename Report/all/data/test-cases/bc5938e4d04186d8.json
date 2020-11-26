@@ -1,0 +1,78 @@
+{
+  "uid" : "bc5938e4d04186d8",
+  "name" : "优惠券发放记录详细查询Web-错误的优惠券no",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "76081f2d87b27446ce3f0c25ce40bf6c",
+  "time" : {
+    "start" : 1603349657754,
+    "stop" : 1603349657755,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "bbc763403a608f58",
+      "name" : "stdout",
+      "source" : "bbc763403a608f58.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "8004-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ019', '优惠券发放记录详细查询Web-错误的优惠券no', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM0120280416570490618&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "bc5938e4d04186d8.json",
+  "parameterValues" : [ "('MJ019', '优惠券发放记录详细查询Web-错误的优惠券no', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM0120280416570490618&page=0&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+}

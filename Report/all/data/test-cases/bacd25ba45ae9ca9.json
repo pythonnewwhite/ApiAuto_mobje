@@ -1,0 +1,78 @@
+{
+  "uid" : "bacd25ba45ae9ca9",
+  "name" : "密码登录-手机号错误",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "207037eb87fd1fa547ae13124560f332",
+  "time" : {
+    "start" : 1603349507977,
+    "stop" : 1603349507977,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "8320001effd54e93",
+      "name" : "stdout",
+      "source" : "8320001effd54e93.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "23444-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ002', '密码登录-手机号错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg\",\\n    \"password\":\"PVwrv8+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "bacd25ba45ae9ca9.json",
+  "parameterValues" : [ "('MJ002', '密码登录-手机号错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg\",\\n    \"password\":\"PVwrv8+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+}

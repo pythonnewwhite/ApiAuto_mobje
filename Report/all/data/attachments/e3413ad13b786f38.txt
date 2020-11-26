@@ -1,0 +1,5 @@
+d <class 'bytes'>
+这个是post请求
+body b'{"identityNumber":"411503199310185317"}'
+header {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqFsJ68648U6t0dAfuZrV3rFCFK7AQlK5eaNui/IaGFkl/cB1VMyy/8FtSzeE3hoObgzPeqKyNHRaQ+k2KVxwmrwBFNlNOgrAArUtv8YFSZfQwsCEDR2VPQGg91EyrJGbV5fakk393eK6Q=='}
+请求结果响应值： {"data":{"id":12236,"companyName":"一汽大众","companyNo":"FD012019010512112323445","department":[{"no":"FD022019112202543838316","departmentName":"123","approvalStatus":"PRIOR"}],"gender":"MALE","identityNumber":"411503199310185317","name":"柴宝国","phone":"15900842165","status":true,"userPrivileges":"APPROVERLEADER"},"status":"success"}

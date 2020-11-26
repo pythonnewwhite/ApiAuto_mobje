@@ -1,0 +1,78 @@
+{
+  "uid" : "ec0bfbbf2ef450d",
+  "name" : "将消息设为已读-消息ID为空",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "1dec2a408fa7187e1ec785480edd0bed",
+  "time" : {
+    "start" : 1603349411649,
+    "stop" : 1603349411651,
+    "duration" : 2
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "bdc390be27a80f5f",
+      "name" : "stdout",
+      "source" : "bdc390be27a80f5f.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "7500-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ009', '将消息设为已读-消息ID为空', 'no', 'message/inpublic/read', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "ec0bfbbf2ef450d.json",
+  "parameterValues" : [ "('MJ009', '将消息设为已读-消息ID为空', 'no', 'message/inpublic/read', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"errors\":[{\"errcode\":\"user.00005\",\"errmsg\":\"您的账号已在其他设备登录，请重新登录\"}],\"failure\":false,\"status\":\"FAILURE\",\"success\":false}', None)" ]
+}

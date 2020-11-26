@@ -1,0 +1,78 @@
+{
+  "uid" : "d3cb8cc9a7fade41",
+  "name" : "密码登录-无参数",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "9120bb29c41ab3360efd7a5d872d1231",
+  "time" : {
+    "start" : 1603349411638,
+    "stop" : 1603349411638,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "8a35e737fc90b6cd",
+      "name" : "stdout",
+      "source" : "8a35e737fc90b6cd.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "7500-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ006', '密码登录-无参数', 'no', 'user/user/enrollee/login/password', 'post', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "d3cb8cc9a7fade41.json",
+  "parameterValues" : [ "('MJ006', '密码登录-无参数', 'no', 'user/user/enrollee/login/password', 'post', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+}

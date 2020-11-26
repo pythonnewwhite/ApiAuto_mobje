@@ -1,0 +1,78 @@
+{
+  "uid" : "8171049ada591898",
+  "name" : "优惠券批量发放Web-创建人为null",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "5181fd01518b8e82a1819af75692085b",
+  "time" : {
+    "start" : 1603349657962,
+    "stop" : 1603349657963,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "c34872d0cc740684",
+      "name" : "stdout",
+      "source" : "c34872d0cc740684.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "8004-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ046', '优惠券批量发放Web-创建人为null', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':null}\", None, 'failure', None, None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "8171049ada591898.json",
+  "parameterValues" : [ "('MJ046', '优惠券批量发放Web-创建人为null', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':null}\", None, 'failure', None, None)" ]
+}

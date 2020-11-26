@@ -1,0 +1,78 @@
+{
+  "uid" : "6b8cee063c128c05",
+  "name" : "优惠券发放记录详细查询Web-页数为10000000",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "a9ce00bedc50194251f8282e7770e3ed",
+  "time" : {
+    "start" : 1603349411717,
+    "stop" : 1603349411718,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "d7dfe4de7c7c972c",
+      "name" : "stdout",
+      "source" : "d7dfe4de7c7c972c.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "7500-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ025', '优惠券发放记录详细查询Web-页数为10000000', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=1000000&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "6b8cee063c128c05.json",
+  "parameterValues" : [ "('MJ025', '优惠券发放记录详细查询Web-页数为10000000', 'no', 'coupon/coupon/tmCoupon/selectUserInformationByCouponWeb?couponNo=TM012020080416570490618&page=1000000&size=10', 'get', None, None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+}

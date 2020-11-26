@@ -1,0 +1,112 @@
+{
+  "uid" : "cdc6b434298ad767",
+  "name" : "密码登录-密码错误",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "bf5c19b21c5663aa6fae1883df7a5f72",
+  "time" : {
+    "start" : 1603351247423,
+    "stop" : 1603351247423,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "4721d2b6dc345848",
+      "name" : "stdout",
+      "source" : "4721d2b6dc345848.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "10324-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ003', '密码登录-密码错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv9+oVP\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ {
+      "uid" : "3a5562c1a0ba7225",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603350038957,
+        "stop" : 1603350038957,
+        "duration" : 0
+      }
+    }, {
+      "uid" : "fbf6810f8e0975e8",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349657621,
+        "stop" : 1603349657622,
+        "duration" : 1
+      }
+    }, {
+      "uid" : "f7e378ba0ff3a551",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349507981,
+        "stop" : 1603349507982,
+        "duration" : 1
+      }
+    }, {
+      "uid" : "6719592eac758fff",
+      "status" : "passed",
+      "time" : {
+        "start" : 1603349411623,
+        "stop" : 1603349411624,
+        "duration" : 1
+      }
+    } ],
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "cdc6b434298ad767.json",
+  "parameterValues" : [ "('MJ003', '密码登录-密码错误', 'no', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv9+oVP\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'failure', 'The system is busy, please try again later!', None)" ]
+}

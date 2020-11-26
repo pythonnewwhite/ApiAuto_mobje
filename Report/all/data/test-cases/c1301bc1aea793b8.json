@@ -1,0 +1,78 @@
+{
+  "uid" : "c1301bc1aea793b8",
+  "name" : "优惠券批量发放Web-入参正确的场景",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "0a6845bdce04ad462ea97b44d9092344",
+  "time" : {
+    "start" : 1603349657945,
+    "stop" : 1603349657946,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "2f06cc5a86783a70",
+      "name" : "stdout",
+      "source" : "2f06cc5a86783a70.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "8004-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ044', '优惠券批量发放Web-入参正确的场景', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "c1301bc1aea793b8.json",
+  "parameterValues" : [ "('MJ044', '优惠券批量发放Web-入参正确的场景', 'no', 'coupon/coupon/tmCoupon/tmCouponBatchDistributionWeb', 'post', '{\\n  \"enrolleeId\": [\\n    {\\n      \"id\": 1000339,\\n      \"identityNumber\": \"430523198910251131\",\\n      \"name\": \"刘兵\",\\n      \"phone\": \"15900842165\"\\n    }\\n  ],\\n  \"no\": \"TM012020081017160493111\"\\n}', None, \"{'Content-Type': 'application/json;charset=utf-8','approval':'admin'}\", None, 'success', '{\"code\":1,\"msg\":null,\"data\":null,\"errors\":[{\"errcode\":\"5001\",\"errmsg\":\"优惠券信息不存在!\",\"field\":null}],\"pageable\":null,\"status\":\"failure\"}', None)" ]
+}

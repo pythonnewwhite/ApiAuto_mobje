@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Report</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function find_all(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sort_column(elem) {
+    toggle_sort_states(elem);
+    var colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    var key;
+    if (elem.classList.contains('numeric')) {
+        key = key_num;
+    } else if (elem.classList.contains('result')) {
+        key = key_result;
+    } else {
+        key = key_alpha;
+    }
+    sort_table(elem, key(colIndex));
+}
+
+function show_all_extras() {
+    find_all('.col-result').forEach(show_extras);
+}
+
+function hide_all_extras() {
+    find_all('.col-result').forEach(hide_extras);
+}
+
+function show_extras(colresult_elem) {
+    var extras = colresult_elem.parentNode.nextElementSibling;
+    var expandcollapse = colresult_elem.firstElementChild;
+    extras.classList.remove("collapsed");
+    expandcollapse.classList.remove("expander");
+    expandcollapse.classList.add("collapser");
+}
+
+function hide_extras(colresult_elem) {
+    var extras = colresult_elem.parentNode.nextElementSibling;
+    var expandcollapse = colresult_elem.firstElementChild;
+    extras.classList.add("collapsed");
+    expandcollapse.classList.remove("collapser");
+    expandcollapse.classList.add("expander");
+}
+
+function show_filters() {
+    var filter_items = document.getElementsByClassName('filter');
+    for (var i = 0; i < filter_items.length; i++)
+        filter_items[i].hidden = false;
+}
+
+function add_collapse() {
+    // Add links for show/hide all
+    var resulttable = find('table#results-table');
+    var showhideall = document.createElement("p");
+    showhideall.innerHTML = '<a href="javascript:show_all_extras()">Show all details</a> / ' +
+                            '<a href="javascript:hide_all_extras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    find_all('.col-result').forEach(function(elem) {
+        var collapsed = get_query_parameter('collapsed') || 'Passed';
+        var extras = elem.parentNode.nextElementSibling;
+        var expandcollapse = document.createElement("span");
+        if (extras.classList.contains("collapsed")) {
+            expandcollapse.classList.add("expander")
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add("collapsed");
+            expandcollapse.classList.add("expander");
+        } else {
+            expandcollapse.classList.add("collapser");
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener("click", function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains("collapsed")) {
+                show_extras(event.currentTarget);
+            } else {
+                hide_extras(event.currentTarget);
+            }
+        });
+    })
+}
+
+function get_query_parameter(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () {
+    reset_sort_headers();
+
+    add_collapse();
+
+    show_filters();
+
+    sort_column(find('.initial-sort'));
+
+    find_all('.sortable').forEach(function(elem) {
+        elem.addEventListener("click",
+                              function(event) {
+                                  sort_column(elem);
+                              }, false)
+    });
+
+};
+
+function sort_table(clicked, key_func) {
+    var rows = find_all('.results-table-row');
+    var reversed = !clicked.classList.contains('asc');
+    var sorted_rows = sort(rows, key_func, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    var thead = document.getElementById("results-table-head");
+    document.getElementById('results-table').remove();
+    var parent = document.createElement("table");
+    parent.id = "results-table";
+    parent.appendChild(thead);
+    sorted_rows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName("BODY")[0].appendChild(parent);
+}
+
+function sort(items, key_func, reversed) {
+    var sort_array = items.map(function(item, i) {
+        return [key_func(item), i];
+    });
+
+    sort_array.sort(function(a, b) {
+        var key_a = a[0];
+        var key_b = b[0];
+
+        if (key_a == key_b) return 0;
+
+        if (reversed) {
+            return (key_a < key_b ? 1 : -1);
+        } else {
+            return (key_a > key_b ? 1 : -1);
+        }
+    });
+
+    return sort_array.map(function(item) {
+        var index = item[1];
+        return items[index];
+    });
+}
+
+function key_alpha(col_index) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[col_index].firstChild.data.toLowerCase();
+    };
+}
+
+function key_num(col_index) {
+    return function(elem) {
+        return parseFloat(elem.childNodes[1].childNodes[col_index].firstChild.data);
+    };
+}
+
+function key_result(col_index) {
+    return function(elem) {
+        var strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+                       'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[col_index].firstChild.data);
+    };
+}
+
+function reset_sort_headers() {
+    find_all('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    find_all('.sortable').forEach(function(elem) {
+        var icon = document.createElement("div");
+        icon.className = "sort-icon";
+        icon.textContent = "vvv";
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove("desc", "active");
+        elem.classList.add("asc", "inactive");
+    });
+}
+
+function toggle_sort_states(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        reset_sort_headers();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function is_all_rows_hidden(value) {
+  return value.hidden == false;
+}
+
+function filter_table(elem) {
+    var outcome_att = "data-test-result";
+    var outcome = elem.getAttribute(outcome_att);
+    class_outcome = outcome + " results-table-row";
+    var outcome_rows = document.getElementsByClassName(class_outcome);
+
+    for(var i = 0; i < outcome_rows.length; i++){
+        outcome_rows[i].hidden = !elem.checked;
+    }
+
+    var rows = find_all('.results-table-row').filter(is_all_rows_hidden);
+    var all_rows_hidden = rows.length == 0 ? true : false;
+    var not_found_message = document.getElementById("not-found-message");
+    not_found_message.hidden = !all_rows_hidden;
+}
+</script>
+    <h1>mojie.html</h1>
+    <p>Report generated on 11-Sep-2020 at 14:44:50 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v2.1.1</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>JAVA_HOME</td>
+        <td>C:\soft\jdk\jdk1.8.0_151</td></tr>
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "0.13.1", "py": "1.9.0", "pytest": "6.0.1"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Windows-10-10.0.18362-SP0</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"allure-pytest": "2.8.18", "html": "2.1.1", "metadata": "1.10.0", "rerunfailures": "9.1"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.7.1</td></tr></table>
+    <h2>Summary</h2>
+    <p>16 tests ran in 5.33 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="passed">1 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="failed">15 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>, <input checked="true" class="filter" data-test-result="rerun" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="rerun">15 rerun</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable numeric" col="duration">Duration</th>
+          <th>Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data11]</td>
+          <td class="col-duration">0.11</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F37D898&gt;<br/>case_data1 = (&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F37D898&gt;<br/>case_data = (&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,
+    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,
+    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data12]</td>
+          <td class="col-duration">0.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EA0D438&gt;<br/>case_data1 = (&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EA0D438&gt;<br/>case_data = (&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;PVwrv9+oVP&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;PVwrv9+oVP&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data13]</td>
+          <td class="col-duration">0.10</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371E8FD9E8&gt;<br/>case_data1 = (&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371E8FD9E8&gt;<br/>case_data = (&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:&quot;手机号不能为空,手机号校验失败,&quot;,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;&quot;,
+    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:&quot;手机号不能为空,手机号校验失败,&quot;,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;&quot;,
+    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data14]</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ECB9198&gt;<br/>case_data1 = (&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ECB9198&gt;<br/>case_data = (&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data15]</td>
+          <td class="col-duration">0.11</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ECF9E48&gt;<br/>case_data1 = (&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ECF9E48&gt;<br/>case_data = (&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;NoneType&#x27;&gt;
+None {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;NoneType&#x27;&gt;
+None {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data16]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ED74860&gt;<br/>case_data1 = (&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ED74860&gt;<br/>case_data = (&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data17]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EE47668&gt;<br/>case_data1 = (&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EE47668&gt;<br/>case_data = (&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data18]</td>
+          <td class="col-duration">0.13</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EDB9CC0&gt;<br/>case_data1 = (&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EDB9CC0&gt;<br/>case_data = (&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data19]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F08A4E0&gt;<br/>case_data1 = (&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F08A4E0&gt;<br/>case_data = (&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data110]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F09F908&gt;<br/>case_data1 = (&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F09F908&gt;<br/>case_data = (&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data111]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F127BE0&gt;<br/>case_data1 = (&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F127BE0&gt;<br/>case_data = (&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data112]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F141940&gt;<br/>case_data1 = (&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F141940&gt;<br/>case_data = (&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH23LuIVz1e/V3xG6bgrZF5OA==&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2KK17aQ9/BOPw79uekrdCkg==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data113]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F14F780&gt;<br/>case_data1 = (&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F14F780&gt;<br/>case_data = (&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2p+g3Xvduwu7+jviIk5qP8w==&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH23oIRqJkQLDtjK3fD3kyEUg==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data114]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F186940&gt;<br/>case_data1 = (&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F186940&gt;<br/>case_data = (&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2R2PaoE2jqUl4Onu8uEXVNQ==&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2NERRDjLxKgQ+y+fBo+E42A==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data115]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F1986A0&gt;<br/>case_data1 = (&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F1986A0&gt;<br/>case_data = (&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;NULL&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2xb7dH3CzOFe+xjHMbxkHcg==&#x27;} None
+<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;NULL&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2fX6rX/ebO6bpytiStiwmdg==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data11]</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EA00A20&gt;<br/>case_data1 = (&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EA00A20&gt;<br/>case_data = (&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ002&#x27;, &#x27;密码登录-手机号错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,\n    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg&quot;,
+    &quot;password&quot;:&quot;PVwrv8+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data12]</td>
+          <td class="col-duration">0.10</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371E9DD048&gt;<br/>case_data1 = (&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371E9DD048&gt;<br/>case_data = (&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ003&#x27;, &#x27;密码登录-密码错误&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv9+oVP&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;PVwrv9+oVP&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data13]</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F394A58&gt;<br/>case_data1 = (&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F394A58&gt;<br/>case_data = (&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ004&#x27;, &#x27;密码登录-手机号为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;&quot;,\n    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:&quot;手机号不能为空,手机号校验失败,&quot;,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;&quot;,
+    &quot;password&quot;:&quot;PVwrv10+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data14]</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ECC9160&gt;<br/>case_data1 = (&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ECC9160&gt;<br/>case_data = (&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ005&#x27;, &#x27;密码登录-密码为空&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data15]</td>
+          <td class="col-duration">0.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ED2E518&gt;<br/>case_data1 = (&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ED2E518&gt;<br/>case_data = (&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;failure&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + failure</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ006&#x27;, &#x27;密码登录-无参数&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, None, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;参数类型错误&quot;,&quot;errcode&quot;:&quot;user.00001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;NoneType&#x27;&gt;
+None {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data16]</td>
+          <td class="col-duration">0.16</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ED116D8&gt;<br/>case_data1 = (&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ED116D8&gt;<br/>case_data = (&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ007&#x27;, &#x27;消息列表查询-查询0条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;0&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data17]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371ECD1CF8&gt;<br/>case_data1 = (&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371ECD1CF8&gt;<br/>case_data = (&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ008&#x27;, &#x27;消息列表查询-查询11条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data18]</td>
+          <td class="col-duration">0.17</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EE24AC8&gt;<br/>case_data1 = (&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EE24AC8&gt;<br/>case_data = (&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ009&#x27;, &#x27;消息列表查询-查询1条&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;1&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data19]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EE52FD0&gt;<br/>case_data1 = (&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EE52FD0&gt;<br/>case_data = (&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ010&#x27;, &#x27;消息列表查询-消息来源为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;NULL&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data110]</td>
+          <td class="col-duration">0.15</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371EE4FBE0&gt;<br/>case_data1 = (&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371EE4FBE0&gt;<br/>case_data = (&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ011&#x27;, &#x27;消息列表查询-页码为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;NULL&quot;,\n    &quot;pageSize&quot;:&quot;11&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data111]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F10ED68&gt;<br/>case_data1 = (&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F10ED68&gt;<br/>case_data = (&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/>                assert res.status_code==200<br/>    <br/>                row=int(case_data[0][-3])*100+int(case_data[0][-2])*10+int(case_data[0][-1])+1<br/>                print(&quot;-------------------------------&quot;,row)<br/>                Handle_Excel().excel_write_data(row=row,cols=11,value=res.text)<br/>                print(res.text)<br/>        elif case_data[4] == &#x27;get&#x27;:<br/>                print(&quot;这个是get请求&quot;)<br/>                get_params=eval(case_data[5])<br/>                # print(header)<br/>                res = BaseRquest().send_get(url=url, data=get_params, cookies=cookie, headers=header)<br/>                if res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;] == &quot;success&quot;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:85: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ012&#x27;, &#x27;消息列表查询-每页条数为NULL&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/page&#x27;, &#x27;get&#x27;, &#x27;{\n    &quot;sender&quot;:&quot;MOBJE_APP&quot;,\n&quot;pageIndex&quot;:&quot;0&quot;,\n    &quot;pageSize&quot;:&quot;NULL&quot;\n}\n&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/page
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是get请求
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data112]</td>
+          <td class="col-duration">0.17</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F1242B0&gt;<br/>case_data1 = (&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F1242B0&gt;<br/>case_data = (&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ013&#x27;, &#x27;将消息设为已读-消息ID正确&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[&quot;15991260520128293&quot;,&quot;15991260518731196&quot;]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH23LuIVz1e/V3xG6bgrZF5OA==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data113]</td>
+          <td class="col-duration">0.16</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F16D240&gt;<br/>case_data1 = (&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F16D240&gt;<br/>case_data = (&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ014&#x27;, &#x27;将消息设为已读-消息ID为空列表&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:[]\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:[]
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2p+g3Xvduwu7+jviIk5qP8w==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data114]</td>
+          <td class="col-duration">0.16</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F146198&gt;<br/>case_data1 = (&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F146198&gt;<br/>case_data = (&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ015&#x27;, &#x27;将消息设为已读-消息ID为空&#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2R2PaoE2jqUl4Onu8uEXVNQ==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="rerun results-table-row">
+        <tr>
+          <td class="col-result">Rerun</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data115]</td>
+          <td class="col-duration">0.13</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;test_pytest.Test_pytest object at 0x000002371F197550&gt;<br/>case_data1 = (&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, ...)<br/><br/>    @pytest.mark.flaky(returns=1)<br/>    def test_runcase(self,case_data1):<br/>&gt;       self.my_case(case_data1)<br/><br/>test_pytest.py:23: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = &lt;test_pytest.Test_pytest object at 0x000002371F197550&gt;<br/>case_data = (&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, ...)<br/><br/>    def my_case(self,case_data):<br/>        print(case_data)<br/>        cookie=None<br/>        header=None<br/>        body=None<br/>        if case_data[2] == &#x27;yes&#x27;:<br/>            if hd_ini.read_ini(&quot;host&quot;, &quot;test2&quot;) is not None:<br/>                host=eval(hd_ini.read_ini(&quot;host&quot;,&quot;test2&quot;))<br/>            print(&quot;host&quot;,type(host))<br/>            path=case_data[3]<br/>            url=host+path<br/>            print(&quot;url:&quot;,url)<br/>        else:<br/>            print(&quot;本条case不执行&quot;)<br/>            return<br/>        if case_data[7] !=None:<br/>            print(case_data[7])<br/>            header=eval(case_data[7])<br/>            print(&quot;header&quot;,type(header))<br/>            if &#x27;token&#x27; in header.keys() :<br/>                new_token=EncryptionData().get_token()<br/>                header=Handel_json().change_json_value(header,&#x27;token&#x27;,new_token)<br/>        else:<br/>            print(&quot;header为空&quot;)<br/>    <br/>        if case_data[4] == &quot;post&quot;:<br/>                print(&quot;这个是post请求&quot;)<br/>                body=case_data[5]<br/>                if case_data[6] != None:<br/>                    cookie=eval(case_data[6])<br/>                # if case_data[7] !=None:<br/>                #     header=eval(case_data[7])<br/>                print(&quot;header&quot;, type(header))<br/>                print(&quot;body&quot;, type(body))<br/>                print(body,header,cookie)<br/>                res = self.re.send_post(url=url, data=body, cookie=cookie, header=header)<br/>                if res.text !=&quot;&quot; and case_data[1]==&quot;密码登录-正确&quot;:<br/>                    re_response = json.loads(res.text)<br/>                    # print(&quot;reeee&quot;,type(re_response),re_response[&quot;status&quot;])<br/>                    if re_response[&quot;status&quot;] == &quot;success&quot;:<br/>                        print(111111111111)<br/>                        Handle_init().write_ini(&quot;login&quot;,res.text,section=&quot;test2&quot;)<br/>                        print(2222222222222)<br/>                    else:<br/>                        return<br/>                elif res.text !=&quot;&quot;:<br/>                    re_response = json.loads(res.text)<br/>&gt;                   assert re_response[&#x27;status&#x27;]==&#x27;success&#x27;<br/><span class="error">E                   AssertionError: assert &#x27;FAILURE&#x27; == &#x27;success&#x27;</span><br/><span class="error">E                     - success</span><br/><span class="error">E                     + FAILURE</span><br/><br/>test_pytest.py:71: AssertionError<br/> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ016&#x27;, &#x27;将消息设为已读-消息ID为NULL &#x27;, &#x27;yes&#x27;, &#x27;message/inpublic/read&#x27;, &#x27;post&#x27;, &#x27;{\n&quot;ids&quot;:&quot;NULL&quot;\n}&#x27;, None, &#x27;{\n    &quot;Content-Type&quot;: &quot;application/json&quot;,\n&quot;token&quot;:&quot;toke&quot;\n}&#x27;, None, None, &#x27;{&quot;errors&quot;:[{&quot;errcode&quot;:&quot;user.00005&quot;,&quot;errmsg&quot;:&quot;您的账号已在其他设备登录，请重新登录&quot;}],&quot;failure&quot;:false,&quot;status&quot;:&quot;FAILURE&quot;,&quot;success&quot;:false}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/message/inpublic/read
+{
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+&quot;token&quot;:&quot;toke&quot;
+}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+&quot;ids&quot;:&quot;NULL&quot;
+} {&#x27;Content-Type&#x27;: &#x27;application/json&#x27;, &#x27;token&#x27;: &#x27;IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYep6hjFaAaOvQ6tRw1sP34Z7qTVXW/lprwQVVsMiLAP+wSnaBo6Lh1MsC9vccay/6t10jNfoX4ALFGL/4RC16PWCDQnLrywvMNCe3/lhMni5Px5yEA/NLOiuoD72SEakLc7YLuj2pLZfGuah6I9VMjHf9cAFmqE83YP9b+qy8VWHer4sVdU2BBH2xb7dH3CzOFe+xjHMbxkHcg==&#x27;} None
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_pytest.py::Test_pytest::test_runcase[case_data10]</td>
+          <td class="col-duration">0.14</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>(&#x27;MJ001&#x27;, &#x27;密码登录-正确&#x27;, &#x27;yes&#x27;, &#x27;user/user/enrollee/login/password&#x27;, &#x27;post&#x27;, &#x27;{\n    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,\n    &quot;password&quot;:&quot;PVwrv7+oVPU=&quot;\n}\n&#x27;, None, &quot;{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}&quot;, None, None, &#x27;{&quot;status&quot;:&quot;failure&quot;,&quot;errors&quot;:[{&quot;field&quot;:null,&quot;errmsg&quot;:&quot;用户不存在&quot;,&quot;errcode&quot;:&quot;user.20001&quot;}]}&#x27;, None)
+host &lt;class &#x27;str&#x27;&gt;
+url: http://mgtportal-tc-uat.mobje.faw-vw.com/tsl/api/user/user/enrollee/login/password
+{&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;}
+header &lt;class &#x27;dict&#x27;&gt;
+这个是post请求
+header &lt;class &#x27;dict&#x27;&gt;
+body &lt;class &#x27;str&#x27;&gt;
+{
+    &quot;phone&quot;:&quot;3b8olyAWSNaWVpXe0VFqeg==&quot;,
+    &quot;password&quot;:&quot;PVwrv7+oVPU=&quot;
+}
+ {&#x27;Content-Type&#x27;: &#x27;application/json;charset=utf-8&#x27;} None
+<br/></div></td></tr></tbody></table></body></html>

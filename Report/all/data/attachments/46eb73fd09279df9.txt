@@ -1,0 +1,10 @@
+d <class 'bytes'>
+这个是post请求
+body b'{"identityNumber":"41150319931018537"}'
+header {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqGicwXNOQ/Qa8/2eoPTqUeQ2X/ncWvGyUfFG/o9hpKXv4jwqiRdH8zByHc4ld5tkGaQVI1Z/xRv5b+jOzUTOMV70P+jvfTXAZvOalSreZHBhYjGyTbV4sQ5HbAX3Ux9pphkvqU8CmdkkA=='}
+请求结果响应值： {"data":"NULL_GROUP_USER","status":"success"}
+d <class 'bytes'>
+这个是post请求
+body b'{"identityNumber":"41150319931018537"}'
+header {'Content-Type': 'application/json', 'token': 'IO/lklAkavGPSe96DtzlZnrsgvrR4rKeJ2954lwG1TZW18Aj29XuRfyYMfqns8+7eaTSsNwqYeo3rXrxlj+Jc8wcUup4hhI2e2m56QLKUGyUzOfPs85hyIPiM405AJf7r04k7rPuiqGicwXNOQ/Qa8/2eoPTqUeQ2X/ncWvGyUfFG/o9hpKXv4jwqiRdH8zByHc4ld5tkGaQVI1Z/xRv5b+jOzUTOMV70P+jvfTXAZvOalSreZHBhYjGyTbV4sQ5QL2qk5LggPeHRVfxyUvySw=='}
+请求结果响应值： {"data":"NULL_GROUP_USER","status":"success"}

@@ -1,0 +1,78 @@
+{
+  "uid" : "c81ef05eda2419dc",
+  "name" : "密码登录-正确",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "947341774571908e4f948b7c9dfa99a7",
+  "time" : {
+    "start" : 1603350038422,
+    "stop" : 1603350038949,
+    "duration" : 527
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "df66369f2e02f61a",
+      "name" : "stdout",
+      "source" : "df66369f2e02f61a.txt",
+      "type" : "text/plain",
+      "size" : 622
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "18416-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ001', '密码登录-正确', 'yes', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv7+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"status\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTm8iOiJDRU0tMjAyMDEwMDkxNzUyMDAwMDk3MDAwMyIsInRpbWUiOjE2MDMzNDk2NTcwNTEsInVzZXJJZCI6IjEwMDAzNTMifQ.jd9MpTDHCBYOerPBofkGcDWexbE4bO2IOQDd_vxz5f8\",\"onceToken\":null,\"black\":false,\"sameDevice\":true,\"aid\":\"2020100917520000970003\",\"nickname\":\"柴宝国\",\"username\":\"柴宝国\",\"authenticated\":true}}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "c81ef05eda2419dc.json",
+  "parameterValues" : [ "('MJ001', '密码登录-正确', 'yes', 'user/user/enrollee/login/password', 'post', '{\\n    \"phone\":\"3b8olyAWSNaWVpXe0VFqeg==\",\\n    \"password\":\"PVwrv7+oVPU=\"\\n}\\n', None, \"{'Content-Type': 'application/json;charset=utf-8'}\", None, 'success', '{\"status\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTm8iOiJDRU0tMjAyMDEwMDkxNzUyMDAwMDk3MDAwMyIsInRpbWUiOjE2MDMzNDk2NTcwNTEsInVzZXJJZCI6IjEwMDAzNTMifQ.jd9MpTDHCBYOerPBofkGcDWexbE4bO2IOQDd_vxz5f8\",\"onceToken\":null,\"black\":false,\"sameDevice\":true,\"aid\":\"2020100917520000970003\",\"nickname\":\"柴宝国\",\"username\":\"柴宝国\",\"authenticated\":true}}', None)" ]
+}

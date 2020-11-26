@@ -1,0 +1,78 @@
+{
+  "uid" : "2c16aa25a7483dc7",
+  "name" : "用户使用优惠券App-不入参用户优惠券id",
+  "fullName" : "test_pytest.Test_pytest#test_case",
+  "historyId" : "93b8516f1636fbd29206d08975889fe4",
+  "time" : {
+    "start" : 1603350039235,
+    "stop" : 1603350039236,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "ee214af04a10d340",
+      "name" : "stdout",
+      "source" : "ee214af04a10d340.txt",
+      "type" : "text/plain",
+      "size" : 20
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "hasContent" : true,
+    "shouldDisplayMessage" : false,
+    "attachmentsCount" : 1
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "摩捷出行"
+  }, {
+    "name" : "story",
+    "value" : "登录"
+  }, {
+    "name" : "tag",
+    "value" : "flaky(returns=1)"
+  }, {
+    "name" : "suite",
+    "value" : "test_pytest"
+  }, {
+    "name" : "subSuite",
+    "value" : "Test_pytest"
+  }, {
+    "name" : "host",
+    "value" : "DESKTOP-PFM076R"
+  }, {
+    "name" : "thread",
+    "value" : "18416-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "test_pytest"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "case_data",
+    "value" : "('MJ066', '用户使用优惠券App-不入参用户优惠券id', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":0,\"errors\":[{\"errcode\":\"500\",\"errmsg\":\"服务器内部错误\"}],\"status\":\"failure\"}', None)"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ "flaky(returns=1)" ]
+  },
+  "source" : "2c16aa25a7483dc7.json",
+  "parameterValues" : [ "('MJ066', '用户使用优惠券App-不入参用户优惠券id', 'no', 'coupon/coupon/tmCouponMember/useTmCouponMemberOneAppApp', 'post', None, None, '{\\n    \"Content-Type\": \"application/json\",\\n\"token\":\"toke\"\\n}', None, 'failure', '{\"code\":0,\"errors\":[{\"errcode\":\"500\",\"errmsg\":\"服务器内部错误\"}],\"status\":\"failure\"}', None)" ]
+}

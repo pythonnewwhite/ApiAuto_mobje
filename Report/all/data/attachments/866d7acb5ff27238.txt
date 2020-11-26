@@ -1,0 +1,5 @@
+这个是post请求
+body b'{\n    "phone":"3b8olyAWSNaWVpXe0VFqeg==",\n    "password":"PVwrv7+oVPU="\n}\n'
+header {'Content-Type': 'application/json;charset=utf-8'}
+请求结果响应值： {"status":"success","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTm8iOiJDRU0tMjAyMDEwMDkxNzUyMDAwMDk3MDAwMyIsInRpbWUiOjE2MDMzNDk2NTcwNTEsInVzZXJJZCI6IjEwMDAzNTMifQ.jd9MpTDHCBYOerPBofkGcDWexbE4bO2IOQDd_vxz5f8","onceToken":null,"black":false,"sameDevice":true,"aid":"2020100917520000970003","nickname":"柴宝国","username":"柴宝国","authenticated":true}}
+reeee {'Content-Type': 'application/json;charset=utf-8'}

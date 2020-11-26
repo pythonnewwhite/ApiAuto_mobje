@@ -1,0 +1,681 @@
+[ {
+  "uid" : "4ba658b78b4196d8",
+  "name" : "优惠券发放记录详细查询Web-页数为空",
+  "time" : {
+    "start" : 1603351247505,
+    "stop" : 1603351247506,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "a94139a97748515d",
+  "name" : "优惠券发放记录详细查询Web-页数格式错误",
+  "time" : {
+    "start" : 1603351247526,
+    "stop" : 1603351247527,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "e8cb2e915c17b1f0",
+  "name" : "优惠券发放记录详细查询Web-页面条数为空",
+  "time" : {
+    "start" : 1603351247535,
+    "stop" : 1603351247536,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "61e0a9808f492c7f",
+  "name" : "用户使用优惠券App-用户优惠券id格式不正确",
+  "time" : {
+    "start" : 1603351247706,
+    "stop" : 1603351247707,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "4f389480b0fe1bd1",
+  "name" : "优惠券全部发放Web-优惠券no为null",
+  "time" : {
+    "start" : 1603351247594,
+    "stop" : 1603351247595,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5379c9aae9e2bc94",
+  "name" : "优惠券发放记录详细查询Web-错误的优惠券no",
+  "time" : {
+    "start" : 1603351247494,
+    "stop" : 1603351247494,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "79dfe498ecde2fb",
+  "name" : "优惠券批量发放Web-创建人为空",
+  "time" : {
+    "start" : 1603351247612,
+    "stop" : 1603351247613,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "cdc6b434298ad767",
+  "name" : "密码登录-密码错误",
+  "time" : {
+    "start" : 1603351247423,
+    "stop" : 1603351247423,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "61031ddc67926937",
+  "name" : "密码登录-密码为空",
+  "time" : {
+    "start" : 1603351247432,
+    "stop" : 1603351247432,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "cfd07613d8a070bc",
+  "name" : "优惠券批量发放Web-用户列表为null",
+  "time" : {
+    "start" : 1603351247636,
+    "stop" : 1603351247637,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "58acaf6fb2032ebe",
+  "name" : "对公",
+  "time" : {
+    "start" : 1603351248382,
+    "stop" : 1603351248637,
+    "duration" : 255
+  },
+  "status" : "failed",
+  "severity" : "normal"
+}, {
+  "uid" : "59325176a66751e2",
+  "name" : "优惠券发放记录详细查询Web-不入参页数",
+  "time" : {
+    "start" : 1603351247530,
+    "stop" : 1603351247530,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "8c4c3f0cd9322a69",
+  "name" : "优惠券发放记录详细查询Web-页数为1",
+  "time" : {
+    "start" : 1603351247518,
+    "stop" : 1603351247518,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "56c805082698cdee",
+  "name" : "优惠券全部发放Web-优惠券no为空",
+  "time" : {
+    "start" : 1603351247590,
+    "stop" : 1603351247590,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "f9b86ee2fd318db9",
+  "name" : "优惠券发放记录详细查询Web-页数为0",
+  "time" : {
+    "start" : 1603351247509,
+    "stop" : 1603351247509,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "de682f726e9c045f",
+  "name" : "用户使用优惠券App-用户优惠券id为null",
+  "time" : {
+    "start" : 1603351247702,
+    "stop" : 1603351247702,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "2849914e66b3752c",
+  "name" : "优惠券发放记录详细查询Web-入参正确的参数",
+  "time" : {
+    "start" : 1603351247480,
+    "stop" : 1603351247481,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "ece98d3fa5aee683",
+  "name" : "优惠券全部发放Web-不入参创建人",
+  "time" : {
+    "start" : 1603351247586,
+    "stop" : 1603351247586,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5dd6bf0a0273559e",
+  "name" : "优惠券发放记录详细查询Web-页数为null",
+  "time" : {
+    "start" : 1603351247514,
+    "stop" : 1603351247514,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "9c9f06b42b17021b",
+  "name" : "优惠券发放记录详细查询Web-页面条数格式错误",
+  "time" : {
+    "start" : 1603351247557,
+    "stop" : 1603351247557,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "e806d4ddc45e4fd8",
+  "name" : "优惠券发放记录详情-不入参优惠券人员记录id号",
+  "time" : {
+    "start" : 1603351247471,
+    "stop" : 1603351247472,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "9713fa0ecbfabff2",
+  "name" : "优惠券批量发放Web-用户列表格式不正确",
+  "time" : {
+    "start" : 1603351247641,
+    "stop" : 1603351247641,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "7dd6e733f104a914",
+  "name" : "将消息设为已读-消息ID为空",
+  "time" : {
+    "start" : 1603351247449,
+    "stop" : 1603351247450,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "8b69d440b1a8a234",
+  "name" : "优惠券发放记录详情-优惠券人员记录id号为空",
+  "time" : {
+    "start" : 1603351247463,
+    "stop" : 1603351247463,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "883fe302a50f5018",
+  "name" : "优惠券批量发放Web-不入参创建人",
+  "time" : {
+    "start" : 1603351247628,
+    "stop" : 1603351247628,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "af1387b71f474a89",
+  "name" : "优惠券发放记录详细查询Web-优惠券no为空",
+  "time" : {
+    "start" : 1603351247485,
+    "stop" : 1603351247485,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "6fd914db965f1cbb",
+  "name" : "查询用户优惠券是否可用App-用户优惠券id为空",
+  "time" : {
+    "start" : 1603351247676,
+    "stop" : 1603351247676,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "9867005a232e2f5f",
+  "name" : "优惠券发放记录详情-优惠券人员记录id号为null",
+  "time" : {
+    "start" : 1603351247467,
+    "stop" : 1603351247467,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "8789edd5b3c5e79d",
+  "name" : "优惠券批量发放Web-用户列表为空",
+  "time" : {
+    "start" : 1603351247632,
+    "stop" : 1603351247632,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "361e4c73e65e9a83",
+  "name" : "优惠券全部发放Web-入参正确的场景",
+  "time" : {
+    "start" : 1603351247567,
+    "stop" : 1603351247568,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "33f16f4cd6747f18",
+  "name" : "优惠券全部发放Web-优惠券no格式不正确",
+  "time" : {
+    "start" : 1603351247599,
+    "stop" : 1603351247599,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "b2bd0362ce7969e",
+  "name" : "优惠券批量发放Web-创建人格式不正确",
+  "time" : {
+    "start" : 1603351247622,
+    "stop" : 1603351247623,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "89e1f471db9ff008",
+  "name" : "优惠券发放记录详细查询Web-页数为10000000",
+  "time" : {
+    "start" : 1603351247522,
+    "stop" : 1603351247523,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "114c4b7964eda92f",
+  "name" : "优惠券发放记录详情-入参正确的优惠券人员记录id号",
+  "time" : {
+    "start" : 1603351247458,
+    "stop" : 1603351247459,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "b3902940ae8f0107",
+  "name" : "优惠券发放记录详细查询Web-页面条数为null",
+  "time" : {
+    "start" : 1603351247543,
+    "stop" : 1603351247544,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "ed5d9ed53994add3",
+  "name" : "优惠券全部发放Web-创建人格式不正确",
+  "time" : {
+    "start" : 1603351247581,
+    "stop" : 1603351247581,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "d8e7b6a95dfe7f7f",
+  "name" : "查询用户优惠券是否可用App-用户优惠券id为null",
+  "time" : {
+    "start" : 1603351247680,
+    "stop" : 1603351247680,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "d6a948798375f7eb",
+  "name" : "优惠券批量发放Web-优惠券no为空",
+  "time" : {
+    "start" : 1603351247652,
+    "stop" : 1603351247652,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "a58f5bc677be65a",
+  "name" : "查询用户优惠券是否可用App-入参正确的场景",
+  "time" : {
+    "start" : 1603351247671,
+    "stop" : 1603351247672,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "299ead2beffd5d35",
+  "name" : "用户使用优惠券App-入参正确的场景",
+  "time" : {
+    "start" : 1603351247693,
+    "stop" : 1603351247693,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5fcb920b84439780",
+  "name" : "密码登录-手机号错误",
+  "time" : {
+    "start" : 1603351247418,
+    "stop" : 1603351247419,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "dee693c425deed30",
+  "name" : "优惠券发放记录详情-优惠券人员记录id号错误",
+  "time" : {
+    "start" : 1603351247476,
+    "stop" : 1603351247477,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "2bc350e400be4c09",
+  "name" : "将消息设为已读-消息ID为空列表",
+  "time" : {
+    "start" : 1603351247445,
+    "stop" : 1603351247445,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "323dbffa28bd78cf",
+  "name" : "对公",
+  "time" : {
+    "start" : 1603351248909,
+    "stop" : 1603351249191,
+    "duration" : 282
+  },
+  "status" : "failed",
+  "severity" : "normal"
+}, {
+  "uid" : "b9202eacc9e7ca8f",
+  "name" : "优惠券批量发放Web-不入参优惠券no",
+  "time" : {
+    "start" : 1603351247666,
+    "stop" : 1603351247667,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5135140af306305",
+  "name" : "优惠券发放记录详细查询Web-不入参优惠券no",
+  "time" : {
+    "start" : 1603351247500,
+    "stop" : 1603351247501,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "4022df64b905522f",
+  "name" : "用户使用优惠券App-不入参用户优惠券id",
+  "time" : {
+    "start" : 1603351247711,
+    "stop" : 1603351247712,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "1bcf55d061492cee",
+  "name" : "优惠券全部发放Web-创建人为null",
+  "time" : {
+    "start" : 1603351247577,
+    "stop" : 1603351247577,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5762275b195d1b76",
+  "name" : "密码登录-手机号为空",
+  "time" : {
+    "start" : 1603351247427,
+    "stop" : 1603351247428,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "b38f051c87f6b0f3",
+  "name" : "密码登录-正确",
+  "time" : {
+    "start" : 1603351246931,
+    "stop" : 1603351247414,
+    "duration" : 483
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "a18c2f08639005d1",
+  "name" : "用户使用优惠券App-用户优惠券id为空",
+  "time" : {
+    "start" : 1603351247698,
+    "stop" : 1603351247698,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "4d166c457e36f6a2",
+  "name" : "优惠券发放记录详细查询Web-页面条数为1",
+  "time" : {
+    "start" : 1603351247548,
+    "stop" : 1603351247549,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "75bcd2ce3b5a58d1",
+  "name" : "优惠券发放记录详细查询Web-优惠券no为null",
+  "time" : {
+    "start" : 1603351247489,
+    "stop" : 1603351247489,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "219a18104e9c46ee",
+  "name" : "优惠券批量发放Web-优惠券no为null",
+  "time" : {
+    "start" : 1603351247657,
+    "stop" : 1603351247658,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "5e569d304ddff775",
+  "name" : "优惠券批量发放Web-创建人为null",
+  "time" : {
+    "start" : 1603351247617,
+    "stop" : 1603351247618,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "c40a08a6ff1c0c36",
+  "name" : "优惠券发放记录详细查询Web-不入参页面条数",
+  "time" : {
+    "start" : 1603351247563,
+    "stop" : 1603351247564,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "f7fab772f5fbbec0",
+  "name" : "优惠券批量发放Web-不入参用户列表",
+  "time" : {
+    "start" : 1603351247647,
+    "stop" : 1603351247648,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "ee35c460c2318a31",
+  "name" : "密码登录-无参数",
+  "time" : {
+    "start" : 1603351247437,
+    "stop" : 1603351247437,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "db9c5e03dc6ba4cc",
+  "name" : "优惠券批量发放Web-入参正确的场景",
+  "time" : {
+    "start" : 1603351247607,
+    "stop" : 1603351247608,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "850d279f6bf08e92",
+  "name" : "优惠券发放记录详细查询Web-页面条数为0",
+  "time" : {
+    "start" : 1603351247539,
+    "stop" : 1603351247540,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "4428c864182d5991",
+  "name" : "将消息设为已读-消息ID为NULL ",
+  "time" : {
+    "start" : 1603351247453,
+    "stop" : 1603351247454,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "543ad53aafeee0e4",
+  "name" : "优惠券批量发放Web-优惠券no格式不正确",
+  "time" : {
+    "start" : 1603351247662,
+    "stop" : 1603351247662,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "46443ba5076ecfa",
+  "name" : "查询用户优惠券是否可用App-不入参用户优惠券id",
+  "time" : {
+    "start" : 1603351247689,
+    "stop" : 1603351247689,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "3a2daa06f0f15a",
+  "name" : "将消息设为已读-消息ID正确",
+  "time" : {
+    "start" : 1603351247441,
+    "stop" : 1603351247441,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "1cb2a5cce84c49b0",
+  "name" : "优惠券全部发放Web-创建人为空",
+  "time" : {
+    "start" : 1603351247572,
+    "stop" : 1603351247572,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "a4aa9ce6af197042",
+  "name" : "查询用户优惠券是否可用App-用户优惠券id格式不正确",
+  "time" : {
+    "start" : 1603351247684,
+    "stop" : 1603351247685,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "ead0d11dca1c33cd",
+  "name" : "优惠券全部发放Web-不入参优惠券no",
+  "time" : {
+    "start" : 1603351247603,
+    "stop" : 1603351247603,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "25db10152a4d301",
+  "name" : "优惠券发放记录详细查询Web-页面条数为10000000",
+  "time" : {
+    "start" : 1603351247552,
+    "stop" : 1603351247553,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "severity" : "normal"
+} ]
