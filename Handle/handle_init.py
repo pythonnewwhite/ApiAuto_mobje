@@ -15,17 +15,23 @@ class Handle_init:
         cf.read(self.file_path)
         return cf
     def read_ini(self,key,node=None):
-        """key是option参数，node 为section参数 """
+        """使用ConfigParser 的 get（section，option）方法进行数据读取，
+        key是option参数，node 为section参数 """
         cf=self.load_ini()
         data=cf.get(node,key)
         return data
+    def addsection(self):
+        """添加section"""
+        cf=self.load_ini()
+        # cf.add_section("test3")
+
     def write_ini(self,option,data,section="test1"):
         '''
         option 为key，传值必须为str类型
         data为对应的value;传值必须为str类型
         '''
         cf=self.load_ini()
-        cf.read(self.file_path)
+        # cf.write(open(self.file_path, 'w'))
         cf.set(section=section,option=option,value=data)
         cf.write(open(self.file_path, 'w'))
     def read_token(self,key="token",option="login",node=None):
@@ -42,11 +48,11 @@ if __name__ == '__main__':
     tt=Handle_init()
     token=tt.read_token("token","login","test2")
     print("token",type(token),token)
-    #section='test1'
-    # option='token1'
-    # data='[{"1":"1"}]'
+    section='test3'
+    option='token1'
+    data='[{"1":"1"}]'
     # tt.write_ini(option,data)
-    # tt.write_ini(section=section,option=option,data=option)
+    tt.write_ini(section=section,option=option,data=option)
     # tt.write_ini(section=section,option=option,data=data)
     # file_path = os.path.join(os.path.dirname(os.getcwd()) + '\\config\\test.ini')
     # cf = configparser.ConfigParser()
